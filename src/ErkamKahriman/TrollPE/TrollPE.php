@@ -19,18 +19,16 @@ class TrollPE extends PluginBase implements Listener {
     public function onEnable() {
         self::$instance = $this;
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->registerCommand();
-        $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 30);
+        $this->getServer()->getCommandMap()->register("TrollPE", new TrollCommand($this));
+        $troll = $this->getCommand("troll");
+        $troll->setPermission("trollpe.command");
+        $troll->setDescription("TrollPE Command");
+        $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 35);
         $this->getLogger()->info(C::GREEN."Aktiviert.");
     }
 
     public static function getInstance() : TrollPE{
         return self::$instance;
-    }
-
-    public function registerCommand() : void{
-        $this->getServer()->getCommandMap()->register("TrollPE", new TrollCommand($this));
-        $this->getCommand("troll")->setDescription("TrollPE Command.");
     }
 
     public function rocket(Player $player, int $power = 1){

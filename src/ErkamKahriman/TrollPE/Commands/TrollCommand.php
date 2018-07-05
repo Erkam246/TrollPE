@@ -5,8 +5,6 @@ namespace ErkamKahriman\TrollPE\Commands;
 use ErkamKahriman\TrollPE\TrollPE;
 use ErkamKahriman\TrollPE\Variable;
 use pocketmine\command\CommandSender;
-use pocketmine\command\overload\CommandEnum;
-use pocketmine\command\overload\CommandParameter;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as C;

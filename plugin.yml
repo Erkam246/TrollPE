@@ -1,10 +1,6 @@
 name: TrollPE
 main: ErkamKahriman\TrollPE\TrollPE
 api: 3.0.0
-version: 1.0
+version: 1.0.1
 author: ErkamKahriman
 prefix: "§bTrollPE§r"
-permissions:
-  trollpe.command:
-    description: "Troll Command execute permission."
-    default: op
