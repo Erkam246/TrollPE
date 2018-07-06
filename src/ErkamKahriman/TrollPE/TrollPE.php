@@ -8,6 +8,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Explosion;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\types\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as C;
@@ -23,6 +25,12 @@ class TrollPE extends PluginBase implements Listener {
         $troll = $this->getCommand("troll");
         $troll->setPermission("trollpe.command");
         $troll->setDescription("TrollPE Command");
+        if($this->getServer()->getName() == "Altay"){
+            $troll->setParameters([
+                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", ["chat", "rocket", "freeze", "trigger", "explode"])),
+                new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
+            ]);
+        }
         $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 35);
         $this->getLogger()->info(C::GREEN."Aktiviert.");
     }

@@ -31,9 +31,15 @@ class TrollCommand extends PluginCommand {
                                         if(!empty($msg)){
                                             $spieler->chat($msg);
                                         }
+                                    }else{
+                                        $sender->sendMessage(Variable::PREFIX.C::GRAY."You forgot the Message.");
                                     }
                                 }
+                            }else{
+                                $sender->sendMessage(Variable::PREFIX."Player not found.");
                             }
+                        }else{
+                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "rocket":
@@ -51,7 +57,11 @@ class TrollCommand extends PluginCommand {
                                     }
                                     $sender->sendMessage(Variable::PREFIX.C::AQUA.$spieler->getName().C::WHITE." is now in a rocket.");
                                 }
+                            }else{
+                                $sender->sendMessage(Variable::PREFIX."Player not found.");
                             }
+                        }else{
+                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "freeze":
@@ -70,7 +80,11 @@ class TrollCommand extends PluginCommand {
                                         $sender->sendMessage(Variable::PREFIX.C::RED."You unfrezzed ".C::AQUA.$spieler->getName());
                                     }
                                 }
+                            }else{
+                                $sender->sendMessage(Variable::PREFIX."Player not found.");
                             }
+                        }else{
+                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "trigger":
@@ -87,7 +101,11 @@ class TrollCommand extends PluginCommand {
                                         $sender->sendMessage(Variable::PREFIX.C::RED."You untrigered ".C::AQUA.$spieler->getName());
                                     }
                                 }
+                            }else{
+                                $sender->sendMessage(Variable::PREFIX."Player not found.");
                             }
+                        }else{
+                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "explode":
@@ -102,7 +120,11 @@ class TrollCommand extends PluginCommand {
                                         TrollPE::getInstance()->blowup($spieler);
                                     }
                                 }
+                            }else{
+                                $sender->sendMessage(Variable::PREFIX."Player not found.");
                             }
+                        }else{
+                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     default:
