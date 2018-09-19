@@ -3,9 +3,10 @@
 namespace ErkamKahriman\TrollPE\Commands;
 
 use ErkamKahriman\TrollPE\TrollPE;
-use ErkamKahriman\TrollPE\Variable;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\network\mcpe\protocol\types\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as C;
 
@@ -13,6 +14,15 @@ class TrollCommand extends PluginCommand {
 
     public function __construct(TrollPE $plugin){
         parent::__construct("troll", $plugin);
+        $this->setPermission("trollpe.command");
+        if(TrollPE::getInstance()->getServer()->getName() == "Altay"){
+            $args = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop"];
+            $this->setParameters([
+                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", $args)),
+                new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
+            ]);
+        }
+        $this->setDescription("TrollPE Command.");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args){
@@ -20,115 +30,105 @@ class TrollCommand extends PluginCommand {
             if(isset($args[0])){
                 switch($args[0]){
                     case "chat":
-                        if(!empty($args[1])){
-                            $pname = $args[1];
-                            if(!empty(TrollPE::getInstance()->getServer()->matchPlayer($pname))){
-                                if(TrollPE::getInstance()->getServer()->matchPlayer($pname)[0]->isOnline()){
-                                    $spieler = TrollPE::getInstance()->getServer()->matchPlayer($pname)[0];
-                                    if(isset($args[2])){
-                                        unset($args[0], $args[1]);
-                                        $msg = implode(" ", $args);
-                                        if(!empty($msg)){
-                                            $spieler->chat($msg);
-                                        }
-                                    }else{
-                                        $sender->sendMessage(Variable::PREFIX.C::GRAY."You forgot the Message.");
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                if(isset($args[2])){
+                                    unset($args[0], $args[1]);
+                                    $msg = implode(" ", $args);
+                                    if(!empty($msg)){
+                                        $player->chat($msg);
                                     }
+                                } else{
+                                    $sender->sendMessage(TrollPE::PREFIX.C::GRAY."You forgot the Message.");
                                 }
-                            }else{
-                                $sender->sendMessage(Variable::PREFIX."Player not found.");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
-                        }else{
-                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "rocket":
-                        if(!empty($args[1])){
-                            $pname = $args[1];
-                            if(!empty(TrollPE::getInstance()->getServer()->matchPlayer($pname))){
-                                if(TrollPE::getInstance()->getServer()->matchPlayer($pname)[0]->isOnline()){
-                                    $spieler = TrollPE::getInstance()->getServer()->matchPlayer($pname)[0];
-                                    if(!empty($args[2])){
-                                        if(is_numeric($args[2])){
-                                            TrollPE::getInstance()->rocket($spieler, $args[2]);
-                                        }
-                                    } else{
-                                        TrollPE::getInstance()->rocket($spieler);
-                                    }
-                                    $sender->sendMessage(Variable::PREFIX.C::AQUA.$spieler->getName().C::WHITE." is now in a rocket.");
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                if(!empty($args[2])){
+                                    TrollPE::getInstance()->rocket($player, $args[2]);
+                                } else{
+                                    TrollPE::getInstance()->rocket($player);
                                 }
-                            }else{
-                                $sender->sendMessage(Variable::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX.C::AQUA.$player->getName().C::WHITE." is now in a rocket.");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
-                        }else{
-                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "freeze":
-                        if(!empty($args[1])){
-                            $pname = $args[1];
-                            if(!empty(TrollPE::getInstance()->getServer()->matchPlayer($pname))){
-                                if(TrollPE::getInstance()->getServer()->matchPlayer($pname)[0]->isOnline()){
-                                    $spieler = TrollPE::getInstance()->getServer()->matchPlayer($pname)[0];
-                                    if(!in_array($spieler->getName(), Variable::$FREZZED)){
-                                        Variable::$FREZZED[] = $spieler->getName();
-                                        $spieler->setImmobile(true);
-                                        $sender->sendMessage(Variable::PREFIX.C::WHITE."You frezzed ".C::AQUA.$spieler->getName());
-                                    } else{
-                                        unset(Variable::$FREZZED[array_search($spieler->getName(), Variable::$FREZZED)]);
-                                        $spieler->setImmobile(false);
-                                        $sender->sendMessage(Variable::PREFIX.C::RED."You unfrezzed ".C::AQUA.$spieler->getName());
-                                    }
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                if(!in_array($player->getName(), TrollPE::$FREZZED)){
+                                    TrollPE::$FREZZED[] = $player->getName();
+                                    $player->setImmobile(true);
+                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You frezzed ".C::AQUA.$player->getName());
+                                } else{
+                                    unset(TrollPE::$FREZZED[array_search($player->getName(), TrollPE::$FREZZED)]);
+                                    $player->setImmobile(false);
+                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You unfrezzed ".C::AQUA.$player->getName());
                                 }
-                            }else{
-                                $sender->sendMessage(Variable::PREFIX."Player not found.");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
-                        }else{
-                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "trigger":
-                        if(!empty($args[1])){
-                            $pname = $args[1];
-                            if(!empty(TrollPE::getInstance()->getServer()->matchPlayer($pname))){
-                                if(TrollPE::getInstance()->getServer()->matchPlayer($pname)[0]->isOnline()){
-                                    $spieler = TrollPE::getInstance()->getServer()->matchPlayer($pname)[0];
-                                    if(!in_array($spieler->getName(), Variable::$TRIGERRED)){
-                                        Variable::$TRIGERRED[] = $spieler->getName();
-                                        $sender->sendMessage(Variable::PREFIX.C::WHITE."You triggered ".C::AQUA.$spieler->getName());
-                                    } else{
-                                        unset(Variable::$TRIGERRED[array_search($spieler->getName(), Variable::$TRIGERRED)]);
-                                        $sender->sendMessage(Variable::PREFIX.C::RED."You untrigered ".C::AQUA.$spieler->getName());
-                                    }
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                if(!in_array($player->getName(), TrollPE::$TRIGERRED)){
+                                    TrollPE::$TRIGERRED[] = $player->getName();
+                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You triggered ".C::AQUA.$player->getName());
+                                } else{
+                                    unset(TrollPE::$TRIGERRED[array_search($player->getName(), TrollPE::$TRIGERRED)]);
+                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You untriggered ".C::AQUA.$player->getName());
                                 }
-                            }else{
-                                $sender->sendMessage(Variable::PREFIX."Player not found.");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
-                        }else{
-                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
                         }
                         break;
                     case "explode":
-                        if(!empty($args[1])){
-                            $pname = $args[1];
-                            if(!empty(TrollPE::getInstance()->getServer()->matchPlayer($pname))){
-                                if(TrollPE::getInstance()->getServer()->matchPlayer($pname)[0]->isOnline()){
-                                    $spieler = TrollPE::getInstance()->getServer()->matchPlayer($pname)[0];
-                                    if(!empty($args[2])){
-                                        TrollPE::getInstance()->blowup($spieler, $args[2]);
-                                    } else{
-                                        TrollPE::getInstance()->blowup($spieler);
-                                    }
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                if(!empty($args[2])){
+                                    TrollPE::getInstance()->blowup($player, $args[2]);
+                                } else{
+                                    TrollPE::getInstance()->blowup($player);
                                 }
-                            }else{
-                                $sender->sendMessage(Variable::PREFIX."Player not found.");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
-                        }else{
-                            $sender->sendMessage(Variable::PREFIX."Missing arguments.");
+                        }
+                        break;
+                    case "fakeop":
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                $player->sendMessage("§7You are now op!");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                            }
                         }
                         break;
                     default:
                         $this->sendHelp($sender);
+                        break;
                 }
             } else{
                 $this->sendHelp($sender);
@@ -137,6 +137,6 @@ class TrollCommand extends PluginCommand {
     }
 
     public function sendHelp(Player $player){
-        $player->sendMessage(C::RED."/troll "."chat|rocket|freeze|trigger|explode");
+        $player->sendMessage(C::RED."/troll "."chat|rocket|freeze|trigger|explode|fakeop");
     }
 }

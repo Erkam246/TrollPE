@@ -8,31 +8,25 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Explosion;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\types\CommandEnum;
-use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as C;
 
 class TrollPE extends PluginBase implements Listener {
 
-    private static $instance;
+    /** @var TrollPE $instance */
+    public static $instance;
+
+    public static $FREZZED = [];
+    public static $TRIGERRED = [];
+
+    public const PREFIX = C::AQUA."TrollPE".C::DARK_GRAY." > ".C::RESET;
 
     public function onEnable() {
         self::$instance = $this;
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getCommandMap()->register("TrollPE", new TrollCommand($this));
-        $troll = $this->getCommand("troll");
-        $troll->setPermission("trollpe.command");
-        $troll->setDescription("TrollPE Command");
-        if($this->getServer()->getName() == "Altay"){
-            $troll->setParameters([
-                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", ["chat", "rocket", "freeze", "trigger", "explode"])),
-                new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
-            ]);
-        }
-        $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 35);
-        $this->getLogger()->info(C::GREEN."Aktiviert.");
+        $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 30);
     }
 
     public static function getInstance() : TrollPE{
@@ -51,15 +45,11 @@ class TrollPE extends PluginBase implements Listener {
     public function onQuit(PlayerQuitEvent $event){
         $player = $event->getPlayer();
         $name = $player->getName();
-        if (in_array($name, Variable::$FREZZED)){
-            unset(Variable::$FREZZED[array_search($name, Variable::$FREZZED)]);
+        if (in_array($name, TrollPE::$FREZZED)){
+            unset(TrollPE::$FREZZED[array_search($name, TrollPE::$FREZZED)]);
         }
-        if(in_array($name, Variable::$TRIGERRED)){
-            unset(Variable::$TRIGERRED[array_search($name, Variable::$TRIGERRED)]);
+        if(in_array($name, TrollPE::$TRIGERRED)){
+            unset(TrollPE::$TRIGERRED[array_search($name, TrollPE::$TRIGERRED)]);
         }
-    }
-
-    public function onDisable(){
-        $this->getLogger()->info(C::RED."Deaktiviert.");
     }
 }
