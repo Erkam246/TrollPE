@@ -28,7 +28,7 @@ class TrollCommand extends PluginCommand {
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if($sender instanceof Player && $sender->hasPermission("trollpe.command")){
             if(isset($args[0])){
-                switch($args[0]){
+                switch(strtolower($args[0])){
                     case "chat":
                         $pname = $args[1];
                         if(!empty($pname)){
@@ -53,12 +53,13 @@ class TrollCommand extends PluginCommand {
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
-                                if(!empty($args[2])){
-                                    TrollPE::getInstance()->rocket($player, $args[2]);
+                                $multipler = intval($args[2]);
+                                if(!empty($args[2]) && is_int($multipler)){
+                                    TrollPE::getInstance()->rocket($player, $multipler);
                                 } else{
                                     TrollPE::getInstance()->rocket($player);
                                 }
-                                $sender->sendMessage(TrollPE::PREFIX.C::AQUA.$player->getName().C::WHITE." is now in a rocket.");
+                                $sender->sendMessage(TrollPE::PREFIX.C::RED.$player->getName().C::WHITE." is now in a rocket.");
                             } else{
                                 $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
@@ -105,7 +106,8 @@ class TrollCommand extends PluginCommand {
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
-                                if(!empty($args[2])){
+                                $radius = intval($args[2]);
+                                if(!empty($args[2]) && is_int($radius)){
                                     TrollPE::getInstance()->blowup($player, $args[2]);
                                 } else{
                                     TrollPE::getInstance()->blowup($player);
