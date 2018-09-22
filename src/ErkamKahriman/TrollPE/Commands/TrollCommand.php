@@ -73,11 +73,11 @@ class TrollCommand extends PluginCommand {
                                 if(!in_array($player->getName(), TrollPE::$FREZZED)){
                                     TrollPE::$FREZZED[] = $player->getName();
                                     $player->setImmobile(true);
-                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You frezzed ".C::AQUA.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You frezzed ".C::GREEN.$player->getName());
                                 } else{
                                     unset(TrollPE::$FREZZED[array_search($player->getName(), TrollPE::$FREZZED)]);
                                     $player->setImmobile(false);
-                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You unfrezzed ".C::AQUA.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You unfrezzed ".C::GREEN.$player->getName());
                                 }
                             } else{
                                 $sender->sendMessage(TrollPE::PREFIX."Player not found.");
