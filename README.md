@@ -2,7 +2,7 @@
 
 ## How to use ?
 
-### /troll chat|rocket|freeze|trigger|explode|fakeop
+### /troll chat|rocket|freeze|trigger|explode|fakeop|su
 
 #### Chat in the name of other player /troll chat (player) (message)
 
@@ -15,3 +15,5 @@
 #### Spawns a explosion in a Player /troll explode (player) [radius]
 
 #### Make that players thinks that he is op /troll fakeop (player)
+
+### Run Command as player /troll su (player) (command + args)

@@ -22,14 +22,14 @@ class TrollPE extends PluginBase implements Listener {
 
     public const PREFIX = C::AQUA."TrollPE".C::DARK_GRAY." > ".C::RESET;
 
-    public function onEnable() {
+    public function onEnable(){
         self::$instance = $this;
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getCommandMap()->register("TrollPE", new TrollCommand($this));
         $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 30);
     }
 
-    public static function getInstance() : TrollPE{
+    public static function getInstance(): TrollPE{
         return self::$instance;
     }
 
@@ -45,7 +45,7 @@ class TrollPE extends PluginBase implements Listener {
     public function onQuit(PlayerQuitEvent $event){
         $player = $event->getPlayer();
         $name = $player->getName();
-        if (in_array($name, TrollPE::$FREZZED)){
+        if(in_array($name, TrollPE::$FREZZED)){
             unset(TrollPE::$FREZZED[array_search($name, TrollPE::$FREZZED)]);
         }
         if(in_array($name, TrollPE::$TRIGERRED)){

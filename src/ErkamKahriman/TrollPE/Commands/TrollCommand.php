@@ -16,7 +16,7 @@ class TrollCommand extends PluginCommand {
         parent::__construct("troll", $plugin);
         $this->setPermission("trollpe.command");
         if(TrollPE::getInstance()->getServer()->getName() == "Altay"){
-            $args = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop"];
+            $args = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop", "su"];
             $this->setParameters([
                 new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", $args)),
                 new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
@@ -123,6 +123,20 @@ class TrollCommand extends PluginCommand {
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
                                 $player->sendMessage("§7You are now op!");
+                            } else{
+                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                            }
+                        }
+                        break;
+                    case "su":
+                        $pname = $args[1];
+                        if(!empty($pname)){
+                            $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
+                            if($player != null){
+                                $player->sendMessage(TrollPE::PREFIX."Run Command for ".$player->getName());
+                                unset($args[0], $args[1]);
+                                $cmd = implode(" ", $args);
+                                TrollPE::getInstance()->getServer()->dispatchCommand($player, $cmd, true);
                             } else{
                                 $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
