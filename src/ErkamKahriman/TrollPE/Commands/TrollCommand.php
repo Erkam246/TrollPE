@@ -122,6 +122,7 @@ class TrollCommand extends PluginCommand {
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
+                                $sender->sendMessage(TrollPE::PREFIX."You fakeop't §e".$player->getName()."§r.");
                                 $player->sendMessage("§7You are now op!");
                             } else{
                                 $sender->sendMessage(TrollPE::PREFIX."Player not found.");
@@ -133,10 +134,10 @@ class TrollCommand extends PluginCommand {
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
-                                $player->sendMessage(TrollPE::PREFIX."Run Command for ".$player->getName());
                                 unset($args[0], $args[1]);
                                 $cmd = implode(" ", $args);
                                 TrollPE::getInstance()->getServer()->dispatchCommand($player, $cmd, true);
+                                $sender->sendMessage(TrollPE::PREFIX."§7Run Command for §e".$player->getName()."§8: §r".$cmd);
                             } else{
                                 $sender->sendMessage(TrollPE::PREFIX."Player not found.");
                             }
