@@ -7,10 +7,10 @@ use ErkamKahriman\TrollPE\Commands\TrollCommand;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Explosion;
+use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\TextFormat as C;
 
 class TrollPE extends PluginBase implements Listener {
 
@@ -20,7 +20,7 @@ class TrollPE extends PluginBase implements Listener {
     public static $FREZZED = [];
     public static $TRIGERRED = [];
 
-    public const PREFIX = C::AQUA."TrollPE".C::DARK_GRAY." > ".C::RESET;
+    public const PREFIX = "§bTrollPE §8> §r";
 
     public function onEnable(){
         self::$instance = $this;
@@ -37,8 +37,8 @@ class TrollPE extends PluginBase implements Listener {
         $player->setMotion(new Vector3(0, $power, 0));
     }
 
-    public function blowup(Player $player, int $radius = 1){
-        $eplode = new Explosion($player->getPosition(), $radius);
+    public function blowup(Position $pos, int $radius = 1){
+        $eplode = new Explosion($pos, $radius);
         $eplode->explodeB();
     }
 

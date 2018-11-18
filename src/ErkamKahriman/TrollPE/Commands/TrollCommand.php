@@ -8,17 +8,16 @@ use pocketmine\command\PluginCommand;
 use pocketmine\network\mcpe\protocol\types\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\Player;
-use pocketmine\utils\TextFormat as C;
 
 class TrollCommand extends PluginCommand {
 
     public function __construct(TrollPE $plugin){
         parent::__construct("troll", $plugin);
         $this->setPermission("trollpe.command");
-        if(TrollPE::getInstance()->getServer()->getName() == "Altay"){
-            $args = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop", "su"];
+        if(TrollPE::getInstance()->getServer()->getName() === "Altay"){
+            $params = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop", "su"];
             $this->setParameters([
-                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", $args)),
+                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", $params)),
                 new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
             ]);
         }
@@ -41,10 +40,10 @@ class TrollCommand extends PluginCommand {
                                         $player->chat($msg);
                                     }
                                 } else{
-                                    $sender->sendMessage(TrollPE::PREFIX.C::GRAY."You forgot the Message.");
+                                    $sender->sendMessage(TrollPE::PREFIX."§7You forgot the Message.");
                                 }
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -54,14 +53,14 @@ class TrollCommand extends PluginCommand {
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
                             if($player != null){
                                 $multipler = intval($args[2]);
-                                if(!empty($args[2]) && is_int($multipler)){
+                                if(isset($args[2]) && is_int($multipler)){
                                     TrollPE::getInstance()->rocket($player, $multipler);
                                 } else{
                                     TrollPE::getInstance()->rocket($player);
                                 }
-                                $sender->sendMessage(TrollPE::PREFIX.C::RED.$player->getName().C::WHITE." is now in a rocket.");
+                                $sender->sendMessage(TrollPE::PREFIX."§c".$player->getName()." §fis now in a rocket.");
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -73,14 +72,14 @@ class TrollCommand extends PluginCommand {
                                 if(!in_array($player->getName(), TrollPE::$FREZZED)){
                                     TrollPE::$FREZZED[] = $player->getName();
                                     $player->setImmobile(true);
-                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You frezzed ".C::GREEN.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX."§fYou frezzed §a".$player->getName());
                                 } else{
                                     unset(TrollPE::$FREZZED[array_search($player->getName(), TrollPE::$FREZZED)]);
                                     $player->setImmobile(false);
-                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You unfrezzed ".C::GREEN.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX."§cYou unfrezzed §a".$player->getName());
                                 }
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -91,13 +90,13 @@ class TrollCommand extends PluginCommand {
                             if($player != null){
                                 if(!in_array($player->getName(), TrollPE::$TRIGERRED)){
                                     TrollPE::$TRIGERRED[] = $player->getName();
-                                    $sender->sendMessage(TrollPE::PREFIX.C::WHITE."You triggered ".C::AQUA.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX."§fYou triggered §b".$player->getName());
                                 } else{
                                     unset(TrollPE::$TRIGERRED[array_search($player->getName(), TrollPE::$TRIGERRED)]);
-                                    $sender->sendMessage(TrollPE::PREFIX.C::RED."You untriggered ".C::AQUA.$player->getName());
+                                    $sender->sendMessage(TrollPE::PREFIX."§cYou untriggered §b".$player->getName());
                                 }
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -105,15 +104,16 @@ class TrollCommand extends PluginCommand {
                         $pname = $args[1];
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
-                            if($player != null){
+                            if($player !== null){
                                 $radius = intval($args[2]);
-                                if(!empty($args[2]) && is_int($radius)){
-                                    TrollPE::getInstance()->blowup($player, $args[2]);
+                                if(isset($args[2]) && is_int($radius)){
+                                    TrollPE::getInstance()->blowup($player->getPosition(), $radius);
                                 } else{
-                                    TrollPE::getInstance()->blowup($player);
+                                    TrollPE::getInstance()->blowup($player->getPosition());
                                 }
+                                $sender->sendMessage(TrollPE::PREFIX."§eBlowed up §c".$player->getName());
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -121,11 +121,11 @@ class TrollCommand extends PluginCommand {
                         $pname = $args[1];
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
-                            if($player != null){
-                                $sender->sendMessage(TrollPE::PREFIX."You fakeop't §e".$player->getName()."§r.");
+                            if($player !== null){
+                                $sender->sendMessage(TrollPE::PREFIX."You fakeop't §e".$player->getName());
                                 $player->sendMessage("§7You are now op!");
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -133,13 +133,13 @@ class TrollCommand extends PluginCommand {
                         $pname = $args[1];
                         if(!empty($pname)){
                             $player = TrollPE::getInstance()->getServer()->getPlayer($pname);
-                            if($player != null){
+                            if($player !== null){
                                 unset($args[0], $args[1]);
                                 $cmd = implode(" ", $args);
                                 TrollPE::getInstance()->getServer()->dispatchCommand($player, $cmd, true);
-                                $sender->sendMessage(TrollPE::PREFIX."§7Run Command for §e".$player->getName()."§8: §r".$cmd);
+                                $sender->sendMessage(TrollPE::PREFIX."§7Run Command for §a".$player->getName()."§8: §r".$cmd);
                             } else{
-                                $sender->sendMessage(TrollPE::PREFIX."Player not found.");
+                                $sender->sendMessage(TrollPE::PREFIX."§cPlayer not found.");
                             }
                         }
                         break;
@@ -153,7 +153,7 @@ class TrollCommand extends PluginCommand {
         }
     }
 
-    public function sendHelp(Player $player){
-        $player->sendMessage(C::RED."/troll "."chat|rocket|freeze|trigger|explode|fakeop");
+    private function sendHelp(Player $player){
+        $player->sendMessage("§c/troll chat|rocket|freeze|trigger|explode|fakeop|su");
     }
 }
