@@ -5,6 +5,7 @@ namespace ErkamKahriman\TrollPE\Commands;
 use ErkamKahriman\TrollPE\TrollPE;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\Player;
@@ -17,8 +18,8 @@ class TrollCommand extends PluginCommand {
         if(TrollPE::getInstance()->getServer()->getName() === "Altay"){
             $params = ["chat", "rocket", "freeze", "trigger", "explode", "fakeop", "su"];
             $this->setParameters([
-                new CommandParameter("arguments", CommandParameter::ARG_TYPE_STRING, false, new CommandEnum("args", $params)),
-                new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)
+                new CommandParameter("arguments", AvailableCommandsPacket::ARG_TYPE_STRING, false, new CommandEnum("args", $params)),
+                new CommandParameter("player", AvailableCommandsPacket::ARG_TYPE_TARGET, false)
             ]);
         }
         $this->setDescription("TrollPE Command.");
