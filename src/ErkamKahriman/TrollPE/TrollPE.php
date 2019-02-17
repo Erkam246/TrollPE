@@ -2,29 +2,28 @@
 
 namespace ErkamKahriman\TrollPE;
 
+use ErkamKahriman\EventListener;
 use ErkamKahriman\TrollPE\Tasks\TriggerTask;
 use ErkamKahriman\TrollPE\Commands\TrollCommand;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Explosion;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class TrollPE extends PluginBase implements Listener {
+class TrollPE extends PluginBase  {
 
     /** @var TrollPE $instance */
-    public static $instance;
+    private static $instance;
 
     public static $FREZZED = [];
     public static $TRIGERRED = [];
 
-    public const PREFIX = "§bTrollPE §8> §r";
+    public const PREFIX = "§bTrollPE §8» §f§r";
 
     public function onEnable(){
         self::$instance = $this;
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getCommandMap()->register("TrollPE", new TrollCommand($this));
         $this->getScheduler()->scheduleRepeatingTask(new TriggerTask(), 30);
     }
@@ -40,16 +39,5 @@ class TrollPE extends PluginBase implements Listener {
     public function blowup(Position $pos, int $radius = 1){
         $eplode = new Explosion($pos, $radius);
         $eplode->explodeB();
-    }
-
-    public function onQuit(PlayerQuitEvent $event){
-        $player = $event->getPlayer();
-        $name = $player->getName();
-        if(in_array($name, TrollPE::$FREZZED)){
-            unset(TrollPE::$FREZZED[array_search($name, TrollPE::$FREZZED)]);
-        }
-        if(in_array($name, TrollPE::$TRIGERRED)){
-            unset(TrollPE::$TRIGERRED[array_search($name, TrollPE::$TRIGERRED)]);
-        }
     }
 }

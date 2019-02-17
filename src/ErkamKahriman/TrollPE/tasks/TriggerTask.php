@@ -11,7 +11,7 @@ class TriggerTask extends Task {
         foreach(TrollPE::getInstance()->getServer()->getOnlinePlayers() as $players){
             if($players->spawned){
                 if(in_array($players->getName(), TrollPE::$TRIGERRED)){
-                    $players->addTitle("§k!!!"."§r§4§lTriggered"."§r§k!!!", "§kiejfushnihfpifgzhjlk");
+                    $players->addTitle("§k!!!§r§4§lTriggered§r§k!!!", "§kiejfushnihfpifgzhjlk");
                 }
             }
         }
