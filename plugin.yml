@@ -1,6 +1,6 @@
 name: TrollPE
-main: ErkamKahriman\TrollPE\TrollPE
+main: Erkam246\TrollPE\TrollPE
 api: 4.0.0
-version: 1.0.4
-author: ErkamKahriman
+version: 1.0.5
+author: Erkam246
 prefix: "§bTrollPE§r"
