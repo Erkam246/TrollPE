@@ -16,4 +16,4 @@
 
 #### Make that players thinks that he is op /troll fakeop (player)
 
-### Run Command as player /troll su (player) (command + args)
+#### Run Command as player /troll su (player) (command + args)
